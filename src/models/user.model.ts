@@ -4,7 +4,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IUser extends Document {
   name: string;
   email: string;
-  password?: string; // Optional because we might hide it
+  password: string; 
   mobile?: string;
   role: "user" | "deliveryBoy" | "admin";
   createdAt: Date;
