@@ -18,6 +18,7 @@ import googleImage from "@/assets/google_logo.png";
 import axios from "axios";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 type propType = {
   previousStep: (s: number) => void;
@@ -49,10 +50,7 @@ const RegisterForm = ({ previousStep }: propType) => {
         router.push("/login");
       }
     } catch (error: any) {
-      // If your API returns { message: "Email already exists" }
-      const errorMsg = error.response?.data?.message || "Something went wrong";
-      alert(errorMsg);
-      console.error("Register Error:", errorMsg);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -175,7 +173,10 @@ const RegisterForm = ({ previousStep }: propType) => {
           <span className="flex-1 h-px bg-gray-200"></span>
         </div>
 
-        <button className="w-full flex items-center justify-center gap-3 border border-gray-300 hover:bg-gray-50 py-3 rounded-xl text-gray-700 font-medium transition-all duration-200 cursor-pointer">
+        <button
+          onClick={() => signIn("google")}
+          className="w-full flex items-center justify-center gap-3 border border-gray-300 hover:bg-gray-50 py-3 rounded-xl text-gray-700 font-medium transition-all duration-200 cursor-pointer"
+        >
           <Image src={googleImage} width={20} height={20} alt="google logo" />
           Continue with Google
         </button>
