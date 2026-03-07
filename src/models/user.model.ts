@@ -4,11 +4,12 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IUser extends Document {
   name: string;
   email: string;
-  password: string; 
+  password?: string;
   mobile?: string;
   role: "user" | "deliveryBoy" | "admin";
   createdAt: Date;
   updatedAt: Date;
+  image: string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -27,8 +28,8 @@ const userSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      select: false, // Prevents password from being returned in API calls by default
+      required: false, // This allows Google users to stay password-less
+      select: false, // Prevents password from leaking in API responses
     },
     mobile: {
       type: String,
@@ -38,11 +39,17 @@ const userSchema = new Schema<IUser>(
       enum: ["user", "deliveryBoy", "admin"],
       default: "user",
     },
+    image: {
+      type: String,
+      required: false,
+    },
   },
-  { timestamps: true }
+
+  { timestamps: true },
 );
 
 // 2. Singleton pattern to prevent re-compiling the model
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export default User;

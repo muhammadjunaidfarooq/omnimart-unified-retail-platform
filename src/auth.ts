@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import connectDb from "./lib/mongodb";
 import User from "./models/user.model";
 import bcrypt from "bcryptjs";
+import Google from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -29,8 +30,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("User does not exist");
         }
 
-        // 3. Compare passwords
-        const isMatch = await bcrypt.compare(password, user.password);
+        if (!user.password) {
+          throw new Error(
+            "This account was created with Google. Please sign in with Google.",
+          );
+        }
+
+        // 2. Now TypeScript knows 'user.password' is a string.
+        // Use 'as string' on the credentials password just to be 100% safe.
+        const isMatch = await bcrypt.compare(password as string, user.password);
 
         if (!isMatch) {
           throw new Error("Invalid password");
@@ -45,8 +53,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        await connectDb();
+        let dbUser = await User.findOne({ email: user.email });
+
+        if (!dbUser) {
+          dbUser = await User.create({
+            name: user.name,
+            email: user.email,
+            image: user.image || "",
+          });
+        }
+
+        // Attach DB data to the user object for the JWT/Session callbacks
+        user.id = dbUser._id.toString();
+        user.role = dbUser.role;
+      }
+      return true;
+    },
+
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
