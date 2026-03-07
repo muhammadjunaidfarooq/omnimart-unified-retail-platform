@@ -23,7 +23,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const password = credentials.password as string;
 
         // 2. Find user and include password (since we set select: false in the model)
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).select("+password");
 
         if (!user) {
           throw new Error("User does not exist");
@@ -38,10 +38,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // 4. IMPORTANT: You MUST return the user object for the session to be created
         return {
-          id: user._id.toString(),
+          id: String(user._id),
           name: user.name,
           email: user.email,
-          role: user.role, // If you want to use roles in your app
+          role: user.role,
         };
       },
     }),
@@ -49,19 +49,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     jwt({ token, user }) {
       if (user) {
-        ((token.id = user.id),
-          (token.name = user.name),
-          (token.email = user.email),
-          (token.role = user.role));
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.role = user.role;
       }
       return token;
     },
     session({ session, token }) {
       if (session.user) {
-        ((session.user.id = token.id as string),
-          (session.user.name = token.name as string),
-          (session.user.email = token.email as string),
-          (session.user.role = token.role as string));
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
