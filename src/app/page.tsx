@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
+import AdminDashboard from "@/components/AdminDashboard";
+import DeliveryBoyDashboard from "@/components/DeliveryBoyDashboard";
 import EditRoleMobile from "@/components/EditRoleMobile";
 import Nav from "@/components/Nav";
+import UserDashboard from "@/components/UserDashboard";
 import connectDb from "@/lib/mongodb";
 import User from "@/models/user.model";
 import Image from "next/image";
@@ -24,6 +27,14 @@ export default async function Home() {
   return (
     <>
       <Nav user={plainUser} />
+
+      {user.role == "user" ? (
+        <UserDashboard />
+      ) : user.role == "admin" ? (
+        <AdminDashboard />
+      ) : (
+        <DeliveryBoyDashboard />
+      )}
     </>
   );
 }
