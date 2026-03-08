@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import EditRoleMobile from "@/components/EditRoleMobile";
+import Nav from "@/components/Nav";
 import connectDb from "@/lib/mongodb";
 import User from "@/models/user.model";
 import Image from "next/image";
@@ -18,5 +19,11 @@ export default async function Home() {
     return <EditRoleMobile />;
   }
 
-  return <div></div>;
+  const plainUser = JSON.parse(JSON.stringify(user));
+
+  return (
+    <>
+      <Nav user={plainUser} />
+    </>
+  );
 }

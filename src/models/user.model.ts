@@ -7,9 +7,9 @@ export interface IUser extends Document {
   password?: string;
   mobile?: string;
   role: "user" | "deliveryBoy" | "admin";
+  image?: string;
   createdAt: Date;
   updatedAt: Date;
-  image: string;
 }
 
 const userSchema = new Schema<IUser>(
