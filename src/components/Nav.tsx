@@ -91,19 +91,17 @@ const Nav = ({ user }: { user: IUser }) => {
         </Link>
 
         <div ref={profileDropDown} className="relative">
-          <div
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="relative bg-white rounded-full w-11 h-11 flex items-center overflow-hidden shadow-md hover:scale-105 transition-transform"
-          >
+          <div className="relative bg-white rounded-full w-11 h-11 flex items-center justify-center shadow-md overflow-hidden">
             {user.image ? (
               <Image
                 src={user.image}
                 alt="profile_picture"
                 fill
-                className="object-cover rounded-full"
+                className="object-cover"
+                sizes="44px"
               />
             ) : (
-              <User />
+              <User className="text-green-600 w-6 h-6 shrink-0" />
             )}
           </div>
 
@@ -153,7 +151,7 @@ const Nav = ({ user }: { user: IUser }) => {
                     setIsOpen(false);
                     signOut({ callbackUrl: "/login" });
                   }}
-                  className="flex items-center gap-2 w-full text-left px-3 py-3 hover:bg-red-50 rounded-lg text-gray-700 font-medium"
+                  className="flex items-center gap-2 w-full text-left px-3 py-3 hover:bg-red-50 rounded-lg text-gray-700 font-medium cursor-pointer"
                 >
                   <LogOut className="w-5 h-5 text-red-600" />
                   Log Out

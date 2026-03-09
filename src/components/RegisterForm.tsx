@@ -43,7 +43,7 @@ const RegisterForm = ({ previousStep }: propType) => {
         email,
         password,
       });
-      router.push("/login");
+      router.push("/");
       setLoading(false);
     } catch (error: any) {
       console.error(error);
