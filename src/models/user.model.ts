@@ -49,7 +49,10 @@ const userSchema = new Schema<IUser>(
 );
 
 // 2. Singleton pattern to prevent re-compiling the model
-const User: Model<IUser> =
-  mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+// const User: Model<IUser> =
+//   mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+
 
 export default User;
