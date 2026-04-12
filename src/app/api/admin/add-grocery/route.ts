@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
         { status: 403 },
       );
     }
-
+    // Read data that comes form api (/api/admin/add-grocery)
     const formData = await req.formData();
     const name = formData.get("name") as string;
     const category = formData.get("category") as string;
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       category,
       price,
       unit,
-      image: imageUrl, 
+      image: imageUrl,
     });
 
     return NextResponse.json(grocery, { status: 201 });
