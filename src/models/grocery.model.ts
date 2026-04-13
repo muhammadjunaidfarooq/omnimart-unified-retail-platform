@@ -1,7 +1,8 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 // 1. Define the interface extending Mongoose Document
-export interface IGrocery extends Document {
+export interface IGrocery {
+  _id? : mongoose.Types.ObjectId | string,
   name: string;
   category: string;
   price: string;
