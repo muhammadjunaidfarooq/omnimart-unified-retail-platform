@@ -6,7 +6,6 @@ import Nav from "@/components/Nav";
 import UserDashboard from "@/components/UserDashboard";
 import connectDb from "@/lib/mongodb";
 import User from "@/models/user.model";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
