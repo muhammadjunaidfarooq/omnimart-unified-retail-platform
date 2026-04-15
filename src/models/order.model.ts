@@ -12,7 +12,7 @@ interface IOrder {
     quantity: number;
   }[];
   totalAmount: {
-    type: string;
+    type: number;
   };
   paymentMethod: "cod" | "online";
   address: {
@@ -53,7 +53,6 @@ const orderSchema = new mongoose.Schema<IOrder>(
     ],
     totalAmount: {
       type: Number,
-      required: true,
     },
     paymentMethod: {
       type: String,
