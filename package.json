@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
+    "@types/leaflet": "^1.9.21",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
+    "leaflet": "^1.9.4",
+    "leaflet-geosearch": "^4.4.0",
     "lucide-react": "^0.577.0",
     "mongodb": "^7.1.0",
     "mongoose": "^9.2.4",
@@ -22,6 +25,7 @@
     "next-cloudinary": "^6.17.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-leaflet": "^5.0.0",
     "react-redux": "^9.2.0",
     "streamifier": "^0.1.1"
   },

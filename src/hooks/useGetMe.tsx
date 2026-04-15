@@ -10,7 +10,7 @@ const useGetMe = () => {
   useEffect(() => {
     const getMe = async () => {
       try {
-        const result = await axios.get("api/me");
+        const result = await axios.get("/api/me");
         dispatch(setUserData(result.data));
       } catch (error) {
         console.log(`ERROR: ${error}`);
