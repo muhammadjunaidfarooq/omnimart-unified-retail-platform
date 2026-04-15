@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { message: "Unauthorized: Admin access required" },
         { status: 403 },
-      );
+      ); 
     }
     // Read data that comes form api (/api/admin/add-grocery)
     const formData = await req.formData();
