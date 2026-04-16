@@ -11,6 +11,7 @@ interface IOrder {
     image: string;
     quantity: number;
   }[];
+  isPaid: boolean;
   totalAmount: {
     type: number;
   };
@@ -51,6 +52,10 @@ const orderSchema = new mongoose.Schema<IOrder>(
         quantity: Number,
       },
     ],
+    isPaid: {
+      type: Boolean,
+      default: false,
+    },
     totalAmount: {
       type: Number,
     },
