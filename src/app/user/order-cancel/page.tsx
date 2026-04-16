@@ -64,13 +64,18 @@ function OrderCancel() {
         <RefreshCcw className="w-16 h-16 md:w-20 md:h-20 text-red-500" />
       </motion.div>
       {/* Actions */}
-      <div className="mt-12 flex items-center justify-between gap-4">
+      <motion.div
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+        className="mt-12 flex items-center justify-between gap-4"
+      >
         {/* Continue Shopping */}
         <motion.button
           onClick={() => router.push("/")}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-2 px-6 py-3 rounded-full text-gray-700 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all font-medium"
+          className="flex items-center gap-2 px-6 py-3 cursor-pointer rounded-full text-gray-700 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all font-medium"
         >
           Continue Shopping
         </motion.button>
@@ -85,7 +90,7 @@ function OrderCancel() {
             Retry Payment <RefreshCcw className="w-4 h-4" />
           </motion.div>
         </Link>
-      </div>
+      </motion.div>
 
       {/* Floating particles */}
       <motion.div

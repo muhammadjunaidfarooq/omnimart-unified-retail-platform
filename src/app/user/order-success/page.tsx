@@ -59,7 +59,7 @@ bg-linear-to-b from-green-50 to-white"
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: [0, -10, 0], opacity: 1 }}
         transition={{
-          delay: 1,
+          delay: 0.7,
           duration: 2,
           repeat: Infinity,
           ease: "easeInOut",
@@ -68,12 +68,17 @@ bg-linear-to-b from-green-50 to-white"
       >
         <Package className="w-16 h-16 md:w-20 md:h-20 text-green-500" />
       </motion.div>
-      <div className="mt-12 flex items-center justify-between gap-4">
+      <motion.div
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+        className="mt-12 flex items-center justify-between gap-4"
+      >
         <motion.button
           onClick={() => router.push("/")}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-2 px-6 py-3 rounded-full text-gray-700 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium"
+          className="flex items-center gap-2 px-6 py-3 cursor-pointer rounded-full text-gray-700 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium"
         >
           Continue Shopping
         </motion.button>
@@ -86,7 +91,7 @@ bg-linear-to-b from-green-50 to-white"
             Go to My Orders <ArrowRight className="w-4 h-4" />
           </motion.div>
         </Link>
-      </div>
+      </motion.div>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.2, 0.6, 0.2] }}
