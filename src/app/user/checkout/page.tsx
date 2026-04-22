@@ -127,10 +127,14 @@ const Checkout = () => {
         );
         setAddress((prev) => ({
           ...prev,
-          city: result.data.address.city,
-          state: result.data.address.state,
-          pincode: result.data.address?.postcode || "Not available",
-          fullAddress: result.data.display_name,
+          city:
+            result.data.address.city ||
+            result.data.address.town ||
+            result.data.address.village ||
+            "",
+          state: result.data.address.state || "",
+          pincode: result.data.address?.postcode || "",
+          fullAddress: result.data.display_name || "",
         }));
       } catch (error) {
         console.log("ERROR: ", error);

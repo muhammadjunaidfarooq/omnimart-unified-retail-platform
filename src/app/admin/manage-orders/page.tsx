@@ -15,7 +15,7 @@ const ManageOrders = () => {
       try {
         const result = await axios.get("/api/admin/get-orders");
         setOrders(result.data);
-        console.log(result);
+        // console.log(result);
       } catch (error) {
         console.log(error);
       }
