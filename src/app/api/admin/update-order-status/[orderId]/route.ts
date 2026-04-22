@@ -1,3 +1,4 @@
+import emitEventHandler from "@/lib/emitEventHandler";
 import connectDb from "@/lib/mongodb";
 import DeliveryAssignment from "@/models/deliveryAssignment.model";
 import Order from "@/models/order.model";
@@ -46,6 +47,12 @@ export async function POST(
 
       if (candidates.length == 0) {
         await order.save();
+
+        await emitEventHandler("order-status-update", {
+          orderId: order._id,
+          status: order.status,
+        });
+
         return NextResponse.json(
           { message: "There is no available delivery boys" },
           { status: 200 },
@@ -56,6 +63,19 @@ export async function POST(
         brodcastedTo: candidates,
         status: "brodcasted",
       });
+
+      await deliveryAssignment.populate("order");
+      for (const boyId of candidates) {
+        const boy = await User.findById(boyId);
+        if (boy.socketId) {
+          await emitEventHandler(
+            "new-assignment",
+            deliveryAssignment,
+            boy.socket,
+          );
+        }
+      }
+
       order.assignment = deliveryAssignment._id;
       deliveryBoysPayload = availableDeliveryBoys.map((b) => ({
         id: b._id,
@@ -69,6 +89,11 @@ export async function POST(
 
     await order.save();
     await order.populate("user");
+
+    await emitEventHandler("order-status-update", {
+      orderId: order._id,
+      status: order.status,
+    });
 
     return NextResponse.json(
       {

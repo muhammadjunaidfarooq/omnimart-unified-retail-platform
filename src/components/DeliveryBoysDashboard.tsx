@@ -1,4 +1,5 @@
 "use client";
+import { getSocket } from "@/lib/socket";
 import { IDeliveryAssignment } from "@/models/deliveryAssignment.model";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -17,10 +18,19 @@ const DeliveryBoysDashboard = () => {
     };
     fetchAssignments();
   }, []);
+
+  useEffect((): any => {
+    const socket = getSocket();
+    socket.on("new-assignment", (deliveryAssignment) => {
+      setAssignments((prev)=> [...prev, deliveryAssignment])
+    })
+    return ()=> socket.off("new-assignment")
+  },[])
+
   return (
     <div className="w-full min-h-screen bg-gray-50 p-4">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold mt-[120px] mb-[30px]">
+        <h2 className="text-2xl font-bold mt-30 mb-7.5">
           Delivery Assignments
         </h2>
 

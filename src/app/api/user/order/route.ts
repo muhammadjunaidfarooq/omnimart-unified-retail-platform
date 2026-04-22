@@ -1,3 +1,4 @@
+import emitEventHandler from "@/lib/emitEventHandler";
 import connectDb from "@/lib/mongodb";
 import Order from "@/models/order.model";
 import User from "@/models/user.model";
@@ -28,6 +29,8 @@ export async function POST(req: NextRequest) {
       totalAmount,
       address,
     });
+
+    await emitEventHandler("new-order", newOrder)
 
     return NextResponse.json(newOrder, { status: 201 });
   } catch (error) {

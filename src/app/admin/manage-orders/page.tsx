@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import AdminOrderCard from "@/components/AdminOrderCard";
+import { getSocket } from "@/lib/socket";
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState<IOrder[]>();
@@ -15,13 +16,21 @@ const ManageOrders = () => {
       try {
         const result = await axios.get("/api/admin/get-orders");
         setOrders(result.data);
-        // console.log(result);
       } catch (error) {
         console.log(error);
       }
     };
     getOrders();
   }, []);
+
+  useEffect((): any => {
+    const socket = getSocket();
+    socket?.on("new-order", (newOrder) => {
+      setOrders((prev) => [newOrder, ...prev!]);
+    });
+    return () => socket.off("new-order");
+  }, []);
+
   return (
     <div className="bg-linear-to-b from-white to-gray-100 min-h-screen w-full">
       <div className="fixed top-0 left-0 w-full backdrop-blur-lg bg-white/70 shadow-sm border-b z-50">
