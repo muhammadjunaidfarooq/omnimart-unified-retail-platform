@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import DeliveryBoysDashboard from "./DeliveryBoysDashboard";
 
 const DeliveryBoyDashboard = () => {
   return (
-    <div>DeliveryBoyDashboard</div>
-  )
-}
+    <>
+      <DeliveryBoysDashboard />
+    </>
+  );
+};
 
-export default DeliveryBoyDashboard
+export default DeliveryBoyDashboard;
