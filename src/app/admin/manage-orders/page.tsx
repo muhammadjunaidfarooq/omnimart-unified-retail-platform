@@ -1,5 +1,4 @@
 "use client";
-import { IOrder } from "@/models/order.model";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -7,6 +6,41 @@ import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import AdminOrderCard from "@/components/AdminOrderCard";
 import { getSocket } from "@/lib/socket";
+import mongoose from "mongoose";
+import { IUser } from "@/models/user.model";
+
+interface IOrder {
+  _id?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+  items: {
+    grocery: mongoose.Types.ObjectId;
+    name: string;
+    price: string;
+    unit: string;
+    image: string;
+    quantity: number;
+  }[];
+  isPaid: boolean;
+  totalAmount: {
+    type: number;
+  };
+  paymentMethod: "cod" | "online";
+  address: {
+    fullName: string;
+    mobile: string;
+    city: string;
+    state: string;
+    pincode: string;
+    fullAddress: string;
+    latitude: number;
+    longitude: number;
+  };
+  assignment?: mongoose.Types.ObjectId;
+  assignedDeliveryBoy?: IUser;
+  status: "pending" | "out of delivery" | "delivered";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState<IOrder[]>();
@@ -48,7 +82,7 @@ const ManageOrders = () => {
         <div className="space-y-6">
           {orders?.map((order, index) => (
             <motion.div key={index}>
-              <AdminOrderCard order={order} />
+              <AdminOrderCard key={index} order={order} />
             </motion.div>
           ))}
         </div>

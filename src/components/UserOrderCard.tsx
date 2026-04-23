@@ -1,5 +1,4 @@
 "use client";
-import { IOrder } from "@/models/order.model";
 import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import {
@@ -9,9 +8,45 @@ import {
   MapPin,
   Package,
   Truck,
+  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import { getSocket } from "@/lib/socket";
+import mongoose from "mongoose";
+import { IUser } from "@/models/user.model";
+
+interface IOrder {
+  _id?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+  items: {
+    grocery: mongoose.Types.ObjectId;
+    name: string;
+    price: string;
+    unit: string;
+    image: string;
+    quantity: number;
+  }[];
+  isPaid: boolean;
+  totalAmount: {
+    type: number;
+  };
+  paymentMethod: "cod" | "online";
+  address: {
+    fullName: string;
+    mobile: string;
+    city: string;
+    state: string;
+    pincode: string;
+    fullAddress: string;
+    latitude: number;
+    longitude: number;
+  };
+  assignment?: mongoose.Types.ObjectId;
+  assignedDeliveryBoy?: IUser;
+  status: "pending" | "out of delivery" | "delivered";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 const UserOrderCard = ({ order }: { order: IOrder }) => {
   const [expended, setExpended] = useState(false);
@@ -77,6 +112,7 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
           </span>
         </div>
       </div>
+
       <div className="p-5 space-y-4">
         {order.paymentMethod == "cod" ? (
           <div className="flex items-center gap-2 text-gray-700 text-sm">
@@ -89,6 +125,39 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
             Online Payment
           </div>
         )}
+
+        {order.assignedDeliveryBoy && (
+          <>
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3 text-sm text-gray-700">
+                <UserCheck className="text-blue-600" size={18} />
+                <div className="font-semibold text-gray-800">
+                  <p className="">
+                    Assigned to : <span>{order.assignedDeliveryBoy.name}</span>
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    📞 +92 {order.assignedDeliveryBoy.mobile}
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href={`tel:${order.assignedDeliveryBoy.mobile}`}
+                className="bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition"
+              >
+                Call
+              </a>
+            </div>
+            <button
+              className="w-full flex items-center justify-center gap-2 
+bg-green-600 text-white font-semibold px-4 py-2 rounded-xl shadow 
+hover:bg-green-700 transition"
+            >
+              <Truck size={18} /> Track Your Order
+            </button>
+          </>
+        )}
+
         <div className="flex items-center gap-2 text-gray-700 text-sm">
           <MapPin size={16} className="text-green-600" />
           <span className="truncate">{order.address.fullAddress}</span>
