@@ -14,6 +14,7 @@ import Image from "next/image";
 import { getSocket } from "@/lib/socket";
 import mongoose from "mongoose";
 import { IUser } from "@/models/user.model";
+import { useRouter } from "next/navigation";
 
 interface IOrder {
   _id?: mongoose.Types.ObjectId;
@@ -51,6 +52,7 @@ interface IOrder {
 const UserOrderCard = ({ order }: { order: IOrder }) => {
   const [expended, setExpended] = useState(false);
   const [status, setStatus] = useState(order.status);
+  const router = useRouter();
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
@@ -149,9 +151,11 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
               </a>
             </div>
             <button
-              className="w-full flex items-center justify-center gap-2 
-bg-green-600 text-white font-semibold px-4 py-2 rounded-xl shadow 
-hover:bg-green-700 transition"
+              className="w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded-xl shadow hover:bg-green-700 transition"
+              onClick={() => {
+                if (!order._id) return;
+                router.push(`/user/track-order/${order._id.toString()}`);
+              }}
             >
               <Truck size={18} /> Track Your Order
             </button>

@@ -5,6 +5,12 @@ import { RootState } from "@/redux/store";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import LiveMap from "./LiveMap";
+
+interface ILocation {
+  latitude: number;
+  longitude: number;
+}
 
 const DeliveryBoysDashboard = () => {
   const [assignments, setAssignments] = useState<any[]>([]);
@@ -12,7 +18,14 @@ const DeliveryBoysDashboard = () => {
   const { userData } = useSelector((state: RootState) => state.user);
 
   const [activeOrder, setActiveOrder] = useState<any>(null);
-  const [userLocation, setUserLocation] = useState<any>(null);
+  const [userLocation, setUserLocation] = useState<ILocation>({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [deliveryBoyLocation, setDeliveryBoyLocation] = useState<ILocation>({
+    latitude: 0,
+    longitude: 0,
+  });
 
   const fetchAssignments = async () => {
     try {
@@ -59,6 +72,34 @@ const DeliveryBoysDashboard = () => {
   };
 
   useEffect(() => {
+    const socket = getSocket();
+    if (!userData?._id) return;
+    if (!navigator.geolocation) return;
+    const watcher = navigator.geolocation.watchPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        setDeliveryBoyLocation({
+          latitude: lat,
+          longitude: lon,
+        });
+        socket.emit("update-location", {
+          userId: userData?._id,
+          latitude: lat,
+          longitude: lon,
+        });
+      },
+      (err) => {
+        console.log(err);
+      },
+      {
+        enableHighAccuracy: true,
+      },
+    );
+    return () => navigator.geolocation.clearWatch(watcher);
+  }, [userData?._id]);
+
+  useEffect(() => {
     fetchCurrentOrder();
     fetchAssignments();
   }, [userData]);
@@ -74,7 +115,12 @@ const DeliveryBoysDashboard = () => {
             order#{activeOrder.order._id.slice(-6)}
           </p>
 
-          <div className="rounded-xl border shadow-lg overflow-hidden mb-6"></div>
+          <div className="rounded-xl border shadow-lg overflow-hidden mb-6">
+            <LiveMap
+              userLocation={userLocation}
+              deliveryBoyLocation={deliveryBoyLocation}
+            />
+          </div>
         </div>
       </div>
     );
