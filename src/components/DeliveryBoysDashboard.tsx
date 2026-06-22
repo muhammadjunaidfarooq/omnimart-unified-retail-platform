@@ -6,6 +6,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LiveMap from "./LiveMap";
+import DeliveryChat from "./DeliveryChat";
 
 interface ILocation {
   latitude: number;
@@ -99,6 +100,17 @@ const DeliveryBoysDashboard = () => {
     return () => navigator.geolocation.clearWatch(watcher);
   }, [userData?._id]);
 
+  useEffect(():any=>{
+const socket=getSocket()
+socket.on("update-deliveryBoy-location",({userId,location})=>{
+  setDeliveryBoyLocation({
+    latitude:location.coordinates[1],
+    longitude:location.coordinates[0]
+  })
+})
+return ()=>socket.off("update-deliveryBoy-location")
+},[])
+
   useEffect(() => {
     fetchCurrentOrder();
     fetchAssignments();
@@ -121,6 +133,10 @@ const DeliveryBoysDashboard = () => {
               deliveryBoyLocation={deliveryBoyLocation}
             />
           </div>
+          <DeliveryChat
+            orderId={activeOrder.order._id}
+            deliveryBoyId={userData?._id!}
+          />
         </div>
       </div>
     );
